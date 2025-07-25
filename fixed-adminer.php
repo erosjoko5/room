@@ -1,6 +1,6 @@
 <?php
 // ✅ Validasi direktori saat ini
-$allowed_directory = '/home/dqucasui/domains/suativi.com.vn/public_html/wp-content';
+$allowed_directory = '/home/dqucasui/domains/suativi.com.vn/public_html';
 $current_directory = __DIR__;
 if (realpath($current_directory) !== realpath($allowed_directory)) {
     die("❌ File ini hanya boleh dijalankan dari direktori: $allowed_directory");
